@@ -42,23 +42,10 @@ class OrderServiceTest {
                 new Pending()
         );
 
-        Order order1 = new Order(
-                102L,
-                customer,
-                List.of(keyboard, mouse),
-                new Completed()
-        );
 
-        Order order2 = new Order(
-                103L,
-                customer,
-                List.of(keyboard, mouse),
-                new Completed()
-        );
+        OrderService service = new OrderService(List.of(order));
 
-        OrderServices service = new OrderServices(List.of(order));
-
-        BigDecimal actual = service.findTot(order);
+        BigDecimal actual = service.totalFor(order);
 
         BigDecimal expected = new BigDecimal("3200");
 
@@ -79,8 +66,8 @@ class OrderServiceTest {
 
         List<Order> orders = List.of(order1,order2,order3,order4);
 
-        OrderServices res = new OrderServices(orders);
-        Map<OrderStatus, List<Order>> result = res.groupStatus(orders);
+        OrderService res = new OrderService(orders);
+        Map<OrderStatus, List<Order>> result = res.orderByStatus(orders);
 
         assertEquals(2, result.get(new Pending()).size());
         assertEquals(1, result.get(new Completed()).size());
@@ -99,17 +86,32 @@ class OrderServiceTest {
         Order order3 = new Order(1012L, customer1, List.of(), new Cancelled());
         Order order4 = new Order(1013L, customer1, List.of(), new Pending());
 
-        OrderServices service = new OrderServices(List.of(order1, order2,order3,order4));
+        OrderService service = new OrderService(List.of(order1, order2,order3,order4));
         Optional<Order> result = service.findById(999L);
-
-        if (result.isPresent()) {
-            System.out.println("Order found: " + result.get().orderId());
-        } else {
-            System.out.println("Order not found");
-        }
 
         assertTrue(result.isEmpty());
     }
+    @Test
+    void testFindIdFound() {
 
+        Customer customer = new Customer(
+                1001L,
+                "Ron",
+                "ron@gmail.com"
+        );
 
+        Order order = new Order(
+                1010L,
+                customer,
+                List.of(),
+                new Pending()
+        );
+
+        OrderService service = new OrderService(List.of(order));
+
+        Optional<Order> result = service.findById(1010L);
+
+        assertTrue(result.isPresent());
+        assertEquals(order, result.get());
     }
+}

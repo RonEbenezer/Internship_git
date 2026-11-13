@@ -6,20 +6,20 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class OrderServices {
+public class OrderService {
     private final List<Order> orders;
 
-    public OrderServices(List<Order> orders){
+    public OrderService(List<Order> orders){
         this.orders=orders;
     }
 
-    public BigDecimal findTot(Order orders){
+    public BigDecimal totalFor(Order orders){
         return orders.orderLines().stream()
                 .map(OrderLine::lineTotal)
                 .reduce(BigDecimal.ZERO,BigDecimal::add);
     }
 
-    public Map<OrderStatus,List<Order>> groupStatus(List<Order> orders){
+    public Map<OrderStatus,List<Order>> orderByStatus(List<Order> orders){
         return orders.stream()
                 .collect(Collectors.groupingBy(Order::status));
     }
