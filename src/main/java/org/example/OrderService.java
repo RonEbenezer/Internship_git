@@ -17,7 +17,7 @@ public class OrderService {
         return orders;
     }
 
-    public Order createOrder(createOrderRequest request) {
+    public Order createOrder(CreateOrderRequest request) {
         Long orderId = (long) orders.size() + 1;
 
         Order order = new Order(orderId, request.customer(), request.orderLines(), OrderStatus.PENDING);

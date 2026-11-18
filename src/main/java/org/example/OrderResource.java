@@ -1,8 +1,12 @@
 package org.example;
 
 import jakarta.inject.Inject;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Application;
+import jakarta.ws.rs.POST;
+import jakarta.ws.rs.Consumes;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -12,7 +16,7 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 
-public class orderResource {
+public class OrderResource {
     @Inject
     OrderService orderService;
 
@@ -30,7 +34,7 @@ public class orderResource {
     }
 
     @POST
-    public Response createOrder(createOrderRequest request){
+    public Response createOrder(CreateOrderRequest request){
         Order order = orderService.createOrder(request);
         return Response.status(Response.Status.CREATED)
                 .entity(order)

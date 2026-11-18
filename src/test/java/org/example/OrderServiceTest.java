@@ -81,11 +81,6 @@ class OrderServiceTest {
                 "ron@gmail.com"
         );
 
-        Order order1 = new Order(1010L, customer1, List.of(), OrderStatus.PENDING);
-        Order order2 = new Order(1011L, customer1, List.of(), OrderStatus.COMPLETED);
-        Order order3 = new Order(1012L, customer1, List.of(), OrderStatus.CANCELLED);
-        Order order4 = new Order(1013L, customer1, List.of(), OrderStatus.PENDING);
-
         OrderService service = new OrderService();
         Optional<Order> result = service.findById(999L);
 
@@ -104,7 +99,7 @@ class OrderServiceTest {
                 "P101", "Keyboard", 2, new BigDecimal("1200")
         );
 
-        createOrderRequest request = new createOrderRequest(
+        CreateOrderRequest request = new CreateOrderRequest(
                 customer, List.of(line)
         );
 
