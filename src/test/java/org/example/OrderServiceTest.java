@@ -39,11 +39,11 @@ class OrderServiceTest {
                 101L,
                 customer,
                 List.of(keyboard, mouse),
-                new Pending()
+                OrderStatus.PENDING
         );
 
 
-        OrderService service = new OrderService(List.of(order));
+        OrderService service = new OrderService();
 
         BigDecimal actual = service.totalFor(order);
 
@@ -59,19 +59,19 @@ class OrderServiceTest {
                 "ron@gmail.com"
         );
 
-        Order order1 = new Order(1010L, customer1, List.of(),new Pending());
-        Order order2 = new Order(1011L, customer1, List.of(),new Completed());
-        Order order3 = new Order(1012L, customer1, List.of(),new Cancelled());
-        Order order4 = new Order(1013L, customer1, List.of(),new Pending());
+        Order order1 = new Order(1010L, customer1, List.of(),OrderStatus.PENDING);
+        Order order2 = new Order(1011L, customer1, List.of(),OrderStatus.COMPLETED);
+        Order order3 = new Order(1012L, customer1, List.of(),OrderStatus.CANCELLED);
+        Order order4 = new Order(1013L, customer1, List.of(),OrderStatus.PENDING);
 
         List<Order> orders = List.of(order1,order2,order3,order4);
 
-        OrderService res = new OrderService(orders);
+        OrderService res = new OrderService();
         Map<OrderStatus, List<Order>> result = res.orderByStatus(orders);
 
-        assertEquals(2, result.get(new Pending()).size());
-        assertEquals(1, result.get(new Completed()).size());
-        assertEquals(1, result.get(new Cancelled()).size());
+        assertEquals(2, result.get(OrderStatus.PENDING).size());
+        assertEquals(1, result.get(OrderStatus.COMPLETED).size());
+        assertEquals(1, result.get(OrderStatus.CANCELLED).size());
     }
     @Test
     void testFindId() {
@@ -81,12 +81,7 @@ class OrderServiceTest {
                 "ron@gmail.com"
         );
 
-        Order order1 = new Order(1010L, customer1, List.of(), new Pending());
-        Order order2 = new Order(1011L, customer1, List.of(), new Completed());
-        Order order3 = new Order(1012L, customer1, List.of(), new Cancelled());
-        Order order4 = new Order(1013L, customer1, List.of(), new Pending());
-
-        OrderService service = new OrderService(List.of(order1, order2,order3,order4));
+        OrderService service = new OrderService();
         Optional<Order> result = service.findById(999L);
 
         assertTrue(result.isEmpty());
@@ -100,16 +95,19 @@ class OrderServiceTest {
                 "ron@gmail.com"
         );
 
-        Order order = new Order(
-                1010L,
-                customer,
-                List.of(),
-                new Pending()
+        OrderLine line = new OrderLine(
+                "P101", "Keyboard", 2, new BigDecimal("1200")
         );
 
-        OrderService service = new OrderService(List.of(order));
+        CreateOrderRequest request = new CreateOrderRequest(
+                customer, List.of(line)
+        );
 
-        Optional<Order> result = service.findById(1010L);
+        OrderService service = new OrderService();
+
+        Order order = service.createOrder(request);
+
+        Optional<Order> result = service.findById(order.orderId());
 
         assertTrue(result.isPresent());
         assertEquals(order, result.get());

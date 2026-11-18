@@ -1,4 +1,7 @@
 package org.example;
 
-public sealed interface OrderStatus  permits Pending, Completed, Cancelled{
+public enum OrderStatus {
+    PENDING,
+    COMPLETED,
+    CANCELLED
 }
